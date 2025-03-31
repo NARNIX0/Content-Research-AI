@@ -1,0 +1,12 @@
+2025-03-31 12:46:32,197 - INFO - ====== WebDriver manager ======
+2025-03-31 12:46:33,167 - INFO - Get LATEST chromedriver version for google-chrome
+2025-03-31 12:46:33,377 - INFO - Get LATEST chromedriver version for google-chrome
+2025-03-31 12:46:33,564 - INFO - There is no [win64] chromedriver "134.0.6998.165" for browser google-chrome "134.0.6998" in cache
+2025-03-31 12:46:33,565 - INFO - Get LATEST chromedriver version for google-chrome
+2025-03-31 12:46:33,935 - INFO - WebDriver version 134.0.6998.165 selected
+2025-03-31 12:46:33,938 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.165/win32/chromedriver-win32.zip
+2025-03-31 12:46:33,939 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.165/win32/chromedriver-win32.zip
+2025-03-31 12:46:34,083 - INFO - Driver downloading response is 200
+2025-03-31 12:46:35,827 - INFO - Get LATEST chromedriver version for google-chrome
+2025-03-31 12:46:36,838 - INFO - Driver has been saved in cache [C:\Users\omals\.wdm\drivers\chromedriver\win64\134.0.6998.165]
+2025-03-31 12:46:36,867 - ERROR - Main process failed: [WinError 193] %1 is not a valid Win32 application

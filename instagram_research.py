@@ -1,13 +1,16 @@
 import os
 import time
 import logging
+import platform
+import requests
+import zipfile
+import io
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from dotenv import load_dotenv
 
@@ -32,11 +35,39 @@ class InstagramResearch:
 
     def setup_driver(self):
         """Initialize the Chrome WebDriver with appropriate options."""
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--start-maximized')
-        service = Service(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=chrome_options)
-        self.wait = WebDriverWait(self.driver, 10)
+        try:
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument('--start-maximized')
+            
+            # Using Chrome directly without webdriver_manager
+            if platform.system() == 'Windows':
+                # On Windows, use Edge driver as a fallback if Chrome fails
+                try:
+                    self.driver = webdriver.Chrome(options=chrome_options)
+                except Exception as e:
+                    logging.warning(f"Failed to initialize Chrome driver: {str(e)}")
+                    logging.info("Trying alternative approach...")
+                    
+                    # Try with default Chrome driver location
+                    try:
+                        self.driver = webdriver.Chrome(options=chrome_options)
+                    except:
+                        # If that fails, try Edge as a fallback
+                        from selenium.webdriver.edge.service import Service as EdgeService
+                        from selenium.webdriver.edge.options import Options as EdgeOptions
+                        
+                        edge_options = EdgeOptions()
+                        edge_options.add_argument('--start-maximized')
+                        self.driver = webdriver.Edge(options=edge_options)
+            else:
+                # For non-Windows platforms
+                self.driver = webdriver.Chrome(options=chrome_options)
+                
+            self.wait = WebDriverWait(self.driver, 10)
+            logging.info("WebDriver initialized successfully")
+        except Exception as e:
+            logging.error(f"Failed to initialize WebDriver: {str(e)}")
+            raise
 
     def login_to_instagram(self):
         """Login to Instagram using credentials from .env file."""
@@ -168,18 +199,19 @@ class InstagramResearch:
 def main():
     # List of keywords to search
     keywords = [
-        "fitness motivation",
-        "workout tips",
-        "healthy lifestyle",
-        "nutrition advice",
-        "weight loss",
-        "gym motivation",
-        "healthy eating",
-        "fitness tips",
-        "workout routine",
-        "health tips"
+        "Nutrition Tips",
+        "Weight Loss Tips",
+        "healthy recipes",
+        "Easy meal prep",
+        "High protein meals",
+        "Macros explained",
+        "Calorie deficit",
+        "Nutrition myths",
+        "weight loss foods",
+        "quick healthy snacks"
     ]
 
+    instagram = None
     try:
         instagram = InstagramResearch()
         instagram.login_to_instagram()
@@ -188,7 +220,8 @@ def main():
     except Exception as e:
         logging.error(f"Main process failed: {str(e)}")
     finally:
-        instagram.close()
+        if instagram:
+            instagram.close()
 
 if __name__ == "__main__":
     main() 
