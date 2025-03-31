@@ -12,10 +12,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.chrome.service import Service
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-# Load environment variables
-load_dotenv()
+# Force reload of environment variables
+load_dotenv(find_dotenv(), override=True)
+
+# Print loaded credentials for debugging (remove this in production)
+logging.info(f"Using Instagram username: {os.getenv('INSTAGRAM_USERNAME')}")
+logging.info(f"Using Instagram password: {'*' * len(os.getenv('INSTAGRAM_PASSWORD', ''))}")
 
 # Configure logging
 logging.basicConfig(
@@ -72,6 +76,13 @@ class InstagramResearch:
     def login_to_instagram(self):
         """Login to Instagram using credentials from .env file."""
         try:
+            # Get credentials directly to ensure they're fresh
+            username = os.getenv('INSTAGRAM_USERNAME')
+            password = os.getenv('INSTAGRAM_PASSWORD')
+            
+            if not username or not password:
+                raise ValueError("Instagram credentials not found in .env file. Please check your .env file.")
+            
             self.driver.get('https://www.instagram.com/')
             time.sleep(3)  # Wait for page to load
 
@@ -79,11 +90,13 @@ class InstagramResearch:
             username_input = self.wait.until(
                 EC.presence_of_element_located((By.NAME, "username"))
             )
-            username_input.send_keys(os.getenv('INSTAGRAM_USERNAME'))
+            username_input.clear()  # Clear any existing text
+            username_input.send_keys(username)
 
             # Enter password
             password_input = self.driver.find_element(By.NAME, "password")
-            password_input.send_keys(os.getenv('INSTAGRAM_PASSWORD'))
+            password_input.clear()  # Clear any existing text
+            password_input.send_keys(password)
 
             # Click login button
             login_button = self.driver.find_element(By.XPATH, "//button[@type='submit']")
