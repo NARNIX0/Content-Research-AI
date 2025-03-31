@@ -20,6 +20,11 @@ pip install -r requirements.txt
    - Replace `your_username` with your Instagram username
    - Replace `your_password` with your Instagram password
 
+3. Run the environment check to make sure everything is configured correctly:
+```bash
+python check_setup.py
+```
+
 ## Usage
 
 1. Run the script:
@@ -41,6 +46,16 @@ python instagram_research.py
 - View count filtering (1M+ views)
 - Progress logging
 - Error handling
+
+## Troubleshooting
+
+If you encounter errors related to ChromeDriver:
+
+1. **Driver not found**: The script will now attempt to use the Chrome browser directly without needing a separate ChromeDriver installation.
+
+2. **Win32 application error**: This usually happens when there's a mismatch between your Chrome version and the ChromeDriver. The updated script handles this automatically.
+
+3. **Browser crashes**: If the browser crashes, try running the check_setup.py script to verify your environment.
 
 ## Notes
 
